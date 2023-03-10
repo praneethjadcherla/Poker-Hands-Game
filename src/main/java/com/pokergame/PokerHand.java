@@ -7,58 +7,53 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PokerHand {
-    public String getWinner(String input){
 
-        String[] cards=input.split(" ");
-        List<String> black=new ArrayList<>();
-        List<String> white=new ArrayList<>();
-        List<String> cardValues=Arrays.asList("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A");
+    List<String> cardValues=Arrays.asList("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A");
+    public String getWinner(String input) {
 
-        for (String arr:cards) {
-            if(Arrays.asList(cards).indexOf(arr)<5){
+        String[] cards = input.split(" ");
+        List<String> black = new ArrayList<>();
+        List<String> white = new ArrayList<>();
+
+
+        for (String arr : cards) {
+            if (Arrays.asList(cards).indexOf(arr) < 5) {
                 black.add(arr);
-            }else {
+            } else {
                 white.add(arr);
             }
         }
 
-        //HighCard
-        int maxBlackCardValue=-1;
-        for(String blackCard:black){
-            if(cardValues.indexOf(blackCard.substring(0,1)) > maxBlackCardValue){
-                maxBlackCardValue=cardValues.indexOf(blackCard.substring(0,1));
-            }
-            }
-
-        int maxWhiteCardValue=-1;
-        for(String whiteCard:white){
-            if(cardValues.indexOf(whiteCard.substring(0,1)) > maxWhiteCardValue){
-                maxWhiteCardValue=cardValues.indexOf(whiteCard.substring(0,1));
-            }
+        StringBuilder blackvalues = new StringBuilder();
+        StringBuilder blacksuits = new StringBuilder();
+        for (String v : black) {
+            blackvalues.append(v.charAt(0));
+            blacksuits.append(v.charAt(1));
         }
 
-        if(isFullHouse(black,white)){
+        StringBuilder whitevalues = new StringBuilder();
+        StringBuilder whitesuits = new StringBuilder();
+        for (String w : white) {
+            whitevalues.append(w.charAt(0));
+            whitesuits.append(w.charAt(1));
+        }
+
+
+        //Full House
+        if (isFullHouse(blackvalues)) {
             return "Black wins. - with full house: 4 over 2";
+        } else {
+            return compareHighCard(blackvalues,whitevalues);
+
         }
-
-        if(maxBlackCardValue>maxWhiteCardValue){
-            return "Black wins. - with high card: "+cardValues.get(maxBlackCardValue);
-        } else if (maxBlackCardValue<maxWhiteCardValue) {
-            return "White wins. - with high card: "+cardValues.get(maxWhiteCardValue);
-        }else return "Tie";
-
 
 
     }
 
-    public boolean isFullHouse(List<String> black,List<String> white){
-        String values="",suits="";
-        for (String v:black) {
-            values=values+v.charAt(0);
-            suits=suits+v.charAt(1);
-        }
+    public boolean isFullHouse(StringBuilder values){
+
         Map< Character, Long > result = values
-                .chars().mapToObj(c -> (char) c)
+                .chars().mapToObj(c -> (char)c)
                 .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
 
         result.forEach((cardvalue, count) -> {
@@ -68,6 +63,28 @@ public class PokerHand {
         });
 
         return result.size()==2;
+    }
+
+    public int getHighCard(StringBuilder values){
+        int maxCardValue=-1;
+        for(int i=0;i<values.length();i++){
+            if(cardValues.indexOf(values.substring(i,i+1)) > maxCardValue){
+                maxCardValue=cardValues.indexOf(values.substring(i,i+1));
+            }
+        }
+        return maxCardValue;
+    }
+
+    public String compareHighCard(StringBuilder blackvalues,StringBuilder whitevalues){
+        if (getHighCard(blackvalues) > getHighCard(whitevalues)) {
+            return "Black wins. - with high card: " + cardValues.get(getHighCard(blackvalues));
+        } else if (getHighCard(blackvalues) < getHighCard(whitevalues)) {
+            return "White wins. - with high card: " + cardValues.get(getHighCard(whitevalues));
+        } else {
+            blackvalues.deleteCharAt(blackvalues.indexOf(cardValues.get(getHighCard(blackvalues))));
+            whitevalues.deleteCharAt(whitevalues.indexOf(cardValues.get(getHighCard(whitevalues))));
+            return compareHighCard(blackvalues,whitevalues);
+        }
     }
 
 

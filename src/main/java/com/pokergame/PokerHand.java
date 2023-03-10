@@ -3,6 +3,8 @@ package com.pokergame;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PokerHand {
     public String getWinner(String input){
@@ -20,6 +22,7 @@ public class PokerHand {
             }
         }
 
+        //HighCard
         int maxBlackCardValue=-1;
         for(String blackCard:black){
             if(cardValues.indexOf(blackCard.substring(0,1)) > maxBlackCardValue){
@@ -34,6 +37,10 @@ public class PokerHand {
             }
         }
 
+        if(isFullHouse(black,white)){
+            return "Black wins. - with full house: 4 over 2";
+        }
+
         if(maxBlackCardValue>maxWhiteCardValue){
             return "Black wins. - with high card: "+cardValues.get(maxBlackCardValue);
         } else if (maxBlackCardValue<maxWhiteCardValue) {
@@ -41,5 +48,30 @@ public class PokerHand {
         }else return "Tie";
 
 
+
     }
+
+    public boolean isFullHouse(List<String> black,List<String> white){
+        String values="",suits="";
+        for (String v:black) {
+            values=values+v.charAt(0);
+            suits=suits+v.charAt(1);
+        }
+        Map< Character, Long > result = values
+                .chars().mapToObj(c -> (char) c)
+                .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
+
+        result.forEach((cardvalue, count) -> {
+            if (cardvalue > 1) {
+                System.out.println(cardvalue + " : " + count);
+            }
+        });
+
+        return result.size()==2;
+    }
+
+
+
+
+
 }

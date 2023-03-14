@@ -59,4 +59,13 @@ public class PokerHandTests {
         assertEquals(expected,hand.getWinner());
     }
 
+    @Test
+    public void testFourOfAKindVsTwopairs(){
+        PokerHand hand=new PokerHand("AH 3D AS 2C 3D JC JH JS AC JH");
+
+        String expected="White wins. - with four of a kind: J";
+
+        assertEquals(expected,hand.getWinner());
+    }
+
 }

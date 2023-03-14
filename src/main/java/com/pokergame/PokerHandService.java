@@ -30,6 +30,24 @@ public class PokerHandService {
                         Map.Entry::getValue,
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
+
+    public boolean isFourOfAKind(StringBuilder values){
+        //message.append("full house: ");
+        Map<Character,Long> sortedResult=sortCardsByMap(values);
+
+        for(Map.Entry<Character, Long> item : sortedResult.entrySet()) {
+            //System.out.println(item.getKey() + ":" + item.getValue());
+            if (sortedResult.size() == 2) {
+                if (item.getValue() == 4) {
+                    message.append("four of a kind: ").append(item.getKey());
+                    return true;
+                }
+            } else
+                break;
+        }
+        return false;
+    }
+
     public boolean isFullHouse(StringBuilder values){
         //message.append("full house: ");
         Map<Character,Long> sortedResult=sortCardsByMap(values);

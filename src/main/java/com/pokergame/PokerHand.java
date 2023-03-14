@@ -38,12 +38,15 @@ public class PokerHand {
     public String getWinner() {
         System.out.println(blackvalues+" "+whitevalues);
         int rankOfPlayer1 = getRankOfPlayer(blackvalues, blacksuits);
+        String message1=pokerHandService.message.toString();
+        pokerHandService.message=new StringBuilder();
         int rankOfPlayer2 = getRankOfPlayer(whitevalues, whitesuits);
+        String message2=pokerHandService.message.toString();
         //System.out.println(rankOfPlayer1+" "+rankOfPlayer2);
         if(rankOfPlayer1>rankOfPlayer2){
-            return "Black wins. - with "+pokerHandService.message;
+            return "Black wins. - with "+message1;
         } else if (rankOfPlayer1<rankOfPlayer2) {
-            return "White wins. - with "+pokerHandService.message;
+            return "White wins. - with "+message2;
         }else{
             return pokerHandService.compareHighCard(blackvalues,whitevalues);
         }
@@ -52,7 +55,10 @@ public class PokerHand {
 
     public int getRankOfPlayer(StringBuilder values,StringBuilder suits){
         int rank=0;
-        if (pokerHandService.isFullHouse(values)) {
+        if (pokerHandService.isFourOfAKind(values)) {
+            rank = 8;
+            return rank;
+        }else if (pokerHandService.isFullHouse(values)) {
             rank=7;
             return rank;
         } else if (pokerHandService.isThreeOfAKind(values)) {

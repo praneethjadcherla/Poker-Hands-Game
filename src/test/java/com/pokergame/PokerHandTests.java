@@ -41,4 +41,22 @@ public class PokerHandTests {
         assertEquals(expected,hand.getWinner());
     }
 
+    @Test
+    public void testTwoPairsHandAsWinner(){
+        PokerHand hand=new PokerHand("2H 3D 2S 3C KD 2C 3H 3S 5C AH");
+
+        String expected="Black wins. - with two pairs: 2 and 3";
+
+        assertEquals(expected,hand.getWinner());
+    }
+
+    @Test
+    public void testGameIsTie(){
+        PokerHand hand=new PokerHand("2H 3D 5S 9C KD 2D 3H 5C 9S KH");
+
+        String expected="Tie.";
+
+        assertEquals(expected,hand.getWinner());
+    }
+
 }

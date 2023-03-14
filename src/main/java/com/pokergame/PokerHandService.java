@@ -38,7 +38,7 @@ public class PokerHandService {
             //System.out.println(item.getKey() + ":" + item.getValue());
             if (sortedResult.size() == 2) {
                 if (item.getValue() == 3) {
-                    message.append("full house: "+item.getKey() + " over ");
+                    message.append("full house: ").append(item.getKey()).append(" over ");
                 }
                 if (item.getValue() == 2) {
                     message.append(item.getKey());
@@ -61,21 +61,47 @@ public class PokerHandService {
                     message.append("three of a kind: "+item.getKey());
                     return true;
                 }
+            }
+        }
+        return false;
     }
+
+    public boolean isTwoPairs(StringBuilder values){
+        Map<Character,Long> sortedResult=sortCardsByMap(values);
+        int i=1;
+        for(Map.Entry<Character, Long> item : sortedResult.entrySet()) {
+            //System.out.println(item.getKey() + ":" + item.getValue());
+
+            if (sortedResult.size() == 3) {
+
+                if (item.getValue() == 2 && i==1) {
+                    message.append("two pairs: ").append(item.getKey());
+                    i++;
+                } else if (item.getValue()==2 && i==2) {
+                    message.append(" and ").append(item.getKey());
+                    return true;
+                }
+            }
+            else
+                break;
         }
         return false;
     }
 
     public String compareHighCard(StringBuilder blackvalues,StringBuilder whitevalues){
-        if (getHighCard(blackvalues) > getHighCard(whitevalues)) {
-            return "Black wins. - with high card: " + cardValues.get(getHighCard(blackvalues));
-        } else if (getHighCard(blackvalues) < getHighCard(whitevalues)) {
-            return "White wins. - with high card: " + cardValues.get(getHighCard(whitevalues));
-        } else {
-            blackvalues.deleteCharAt(blackvalues.indexOf(cardValues.get(getHighCard(blackvalues))));
-            whitevalues.deleteCharAt(whitevalues.indexOf(cardValues.get(getHighCard(whitevalues))));
-            return compareHighCard(blackvalues,whitevalues);
+        if(!blackvalues.isEmpty()){
+              if (getHighCard(blackvalues) > getHighCard(whitevalues)) {
+                   return "Black wins. - with high card: " + cardValues.get(getHighCard(blackvalues));
+              } else if (getHighCard(blackvalues) < getHighCard(whitevalues)) {
+                   return "White wins. - with high card: " + cardValues.get(getHighCard(whitevalues));
+              } else{
+                   blackvalues.deleteCharAt(blackvalues.indexOf(cardValues.get(getHighCard(blackvalues))));
+                   whitevalues.deleteCharAt(whitevalues.indexOf(cardValues.get(getHighCard(whitevalues))));
+                   return compareHighCard(blackvalues,whitevalues);
+              }
         }
+        else
+            return "Tie.";
     }
 
     public int getHighCard(StringBuilder values){

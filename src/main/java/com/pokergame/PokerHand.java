@@ -18,13 +18,15 @@ public class PokerHand {
     public PokerHand(String input){
         String[] cards = input.split(" ");
 
-        for (String arr : cards) {
-            if (Arrays.asList(cards).indexOf(arr) < 5) {
-                blackvalues.append(arr.charAt(0));
-                blacksuits.append(arr.charAt(1));
+        for (int index=0;index< cards.length;index++) {
+
+            if (index < 5) {
+                //System.out.println(index+" ");
+                blackvalues.append(cards[index].charAt(0));
+                blacksuits.append(cards[index].charAt(1));
             } else {
-                whitevalues.append(arr.charAt(0));
-                whitesuits.append(arr.charAt(1));
+                whitevalues.append(cards[index].charAt(0));
+                whitesuits.append(cards[index].charAt(1));
             }
         }
 
@@ -34,7 +36,7 @@ public class PokerHand {
 
     PokerHandService pokerHandService=new PokerHandService();
     public String getWinner() {
-
+        System.out.println(blackvalues+" "+whitevalues);
         int rankOfPlayer1 = getRankOfPlayer(blackvalues, blacksuits);
         int rankOfPlayer2 = getRankOfPlayer(whitevalues, whitesuits);
         //System.out.println(rankOfPlayer1+" "+rankOfPlayer2);
@@ -52,6 +54,12 @@ public class PokerHand {
         int rank=0;
         if (pokerHandService.isFullHouse(values)) {
             rank=7;
+            return rank;
+        } else if (pokerHandService.isThreeOfAKind(values)) {
+            rank=4;
+            return 4;
+        } else if (pokerHandService.isTwoPairs(values)) {
+            rank=3;
             return rank;
         } else {
             rank=1;

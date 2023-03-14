@@ -32,4 +32,13 @@ public class PokerHandTests {
         assertEquals(expected,hand.getWinner());
     }
 
+    @Test
+    public void testThreeOfAKindHandAsWinner(){
+        PokerHand hand=new PokerHand("2H 3D 3S 5C KD 2C 3H 3S 8C 3H");
+
+        String expected="White wins. - with three of a kind: 3";
+
+        assertEquals(expected,hand.getWinner());
+    }
+
 }

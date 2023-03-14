@@ -19,22 +19,24 @@ public class PokerHandService {
     public void setMessage(StringBuilder message){
         this.message=message;
     }*/
-
-    public boolean isFullHouse(StringBuilder values){
-        //message.append("full house: ");
+    public Map<Character,Long> sortCardsByMap(StringBuilder values){
         Map< Character, Long > result = values
                 .chars().mapToObj(c -> (char)c)
                 .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
-        LinkedHashMap<Character,Long> sortedResult = result.entrySet().stream()
+        return result.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+    }
+    public boolean isFullHouse(StringBuilder values){
+        //message.append("full house: ");
+        Map<Character,Long> sortedResult=sortCardsByMap(values);
 
         for(Map.Entry<Character, Long> item : sortedResult.entrySet()) {
             //System.out.println(item.getKey() + ":" + item.getValue());
-            if (result.size() == 2) {
+            if (sortedResult.size() == 2) {
                 if (item.getValue() == 3) {
                     message.append("full house: "+item.getKey() + " over ");
                 }
@@ -43,6 +45,23 @@ public class PokerHandService {
                     return true;
                 }
             }
+            else
+                break;
+        }
+        return false;
+    }
+
+    public boolean isThreeOfAKind(StringBuilder values){
+        Map<Character,Long> sortedResult=sortCardsByMap(values);
+
+        for(Map.Entry<Character, Long> item : sortedResult.entrySet()) {
+            //System.out.println(item.getKey() + ":" + item.getValue());
+            if (sortedResult.size() == 3) {
+                if (item.getValue() == 3) {
+                    message.append("three of a kind: "+item.getKey());
+                    return true;
+                }
+    }
         }
         return false;
     }

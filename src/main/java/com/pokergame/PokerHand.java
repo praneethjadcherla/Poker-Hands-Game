@@ -14,14 +14,12 @@ public class PokerHand {
     StringBuilder whitesuits = new StringBuilder();
 
 
-
-    public PokerHand(String input){
+    public PokerHand(String input) {
         String[] cards = input.split(" ");
 
-        for (int index=0;index< cards.length;index++) {
+        for (int index = 0; index < cards.length; index++) {
 
             if (index < 5) {
-                //System.out.println(index+" ");
                 blackvalues.append(cards[index].charAt(0));
                 blacksuits.append(cards[index].charAt(1));
             } else {
@@ -31,46 +29,48 @@ public class PokerHand {
         }
 
     }
+    PokerHandService pokerHandService = new PokerHandService();
 
-
-
-    PokerHandService pokerHandService=new PokerHandService();
     public String getWinner() {
-        System.out.println(blackvalues+" "+whitevalues);
+        System.out.println(blackvalues + " " + whitevalues);
         int rankOfPlayer1 = getRankOfPlayer(blackvalues, blacksuits);
-        String message1=pokerHandService.message.toString();
-        pokerHandService.message=new StringBuilder();
+        String message1 = pokerHandService.message.toString();
+        pokerHandService.message = new StringBuilder();
         int rankOfPlayer2 = getRankOfPlayer(whitevalues, whitesuits);
-        String message2=pokerHandService.message.toString();
-        //System.out.println(rankOfPlayer1+" "+rankOfPlayer2);
-        if(rankOfPlayer1>rankOfPlayer2){
-            return "Black wins. - with "+message1;
-        } else if (rankOfPlayer1<rankOfPlayer2) {
-            return "White wins. - with "+message2;
-        }else{
-            return pokerHandService.compareHighCard(blackvalues,whitevalues);
+        String message2 = pokerHandService.message.toString();
+        if (rankOfPlayer1 > rankOfPlayer2) {
+            return "Black wins. - with " + message1;
+        } else if (rankOfPlayer1 < rankOfPlayer2) {
+            return "White wins. - with " + message2;
+        } else {
+            return pokerHandService.compareHighCard(blackvalues, whitevalues);
         }
 
     }
 
-    public int getRankOfPlayer(StringBuilder values,StringBuilder suits){
-        int rank=0;
-        if (pokerHandService.isFourOfAKind(values)) {
+    public int getRankOfPlayer(StringBuilder values, StringBuilder suits) {
+        int rank = 0;
+        if (pokerHandService.isStraightFlush(values, suits)) {
             rank = 8;
             return rank;
-        }else if (pokerHandService.isFullHouse(values)) {
-            rank=7;
+        } else if (pokerHandService.isFourOfAKind(values)) {
+            rank = 8;
+            return rank;
+        } else if (pokerHandService.isFullHouse(values)) {
+            rank = 7;
             return rank;
         } else if (pokerHandService.isThreeOfAKind(values)) {
-            rank=4;
+            rank = 4;
             return 4;
         } else if (pokerHandService.isTwoPairs(values)) {
-            rank=3;
+            rank = 3;
+            return rank;
+        } else if (pokerHandService.isPair(values)) {
+            rank = 2;
             return rank;
         } else {
-            rank=1;
+            rank = 1;
             return rank;
         }
     }
-
 }
